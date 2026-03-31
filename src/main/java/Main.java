@@ -1,3 +1,7 @@
+import entity.*;
+import entity.Ingredient;
+import entity.Dish;
+
 public class Main {
     public static void main(String[] args) {
         DataRetriever dataRetriever = new DataRetriever();

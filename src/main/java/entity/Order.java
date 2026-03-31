@@ -1,3 +1,5 @@
+package entity;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -70,3 +72,4 @@ public class Order {
         return Objects.hash(id, reference, creationDatetime, dishOrderList);
     }
 }
+

@@ -1,3 +1,5 @@
+package entity;
+
 import java.time.Instant;
 import java.util.Objects;
 
@@ -63,3 +65,4 @@ public class StockMovement {
                 '}';
     }
 }
+

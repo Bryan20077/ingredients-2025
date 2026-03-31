@@ -1,3 +1,5 @@
+package entity;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -115,3 +117,4 @@ public class Ingredient {
                 '}';
     }
 }
+

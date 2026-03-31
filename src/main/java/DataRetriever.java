@@ -4,6 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import entity.CategoryEnum;
+import entity.Dish;
+import entity.DishOrder;
+import entity.DishTypeEnum;
+import entity.Ingredient;
+import entity.MovementTypeEnum;
+import entity.Order;
+import entity.StockMovement;
+import entity.StockValue;
+import entity.Unit;
+
 public class DataRetriever {
 
     Order findOrderByReference(String reference) {
@@ -73,7 +84,7 @@ public class DataRetriever {
                 dish.setDishType(DishTypeEnum.valueOf(resultSet.getString("dish_type")));
                 dish.setPrice(resultSet.getObject("dish_price") == null
                         ? null : resultSet.getDouble("dish_price"));
-                dish.setDishIngredients(findIngredientByDishId(id));
+                dish.setDishIngredients1(findIngredientByDishId(id));
                 return dish;
             }
             dbConnection.closeConnection(connection);
@@ -84,7 +95,7 @@ public class DataRetriever {
     }
 
 
-    Ingredient saveIngredient(Ingredient toSave) {
+    Ingredient saveIngredient(Ingredient ingredient) {
         String upsertIngredientSql = """
                     INSERT INTO ingredient (id, name, price, category)
                     VALUES (?, ?, ?, ?::dish_type)
@@ -99,25 +110,25 @@ public class DataRetriever {
             conn.setAutoCommit(false);
             Integer ingredientId;
             try (PreparedStatement ps = conn.prepareStatement(upsertIngredientSql)) {
-                if (toSave.getId() != null) {
-                    ps.setInt(1, toSave.getId());
+                if (ingredient.getId() != null) {
+                    ps.setInt(1, ingredient.getId());
                 } else {
                     ps.setInt(1, getNextSerialValue(conn, "ingredient", "id"));
                 }
-                if (toSave.getPrice() != null) {
-                    ps.setDouble(2, toSave.getPrice());
+                if (ingredient.getPrice() != null) {
+                    ps.setDouble(2, ingredient.getPrice());
                 } else {
                     ps.setNull(2, Types.DOUBLE);
                 }
-                ps.setString(3, toSave.getName());
-                ps.setString(4, toSave.getCategory().name());
+                ps.setString(3, ingredient.getName());
+                ps.setString(4, ingredient.getCategory().name());
                 try (ResultSet rs = ps.executeQuery()) {
                     rs.next();
                     ingredientId = rs.getInt(1);
                 }
             }
 
-            insertIngredientStockMovements(conn, toSave);
+            insertIngredientStockMovements(conn, ingredient);
 
             conn.commit();
             return findIngredientById(ingredientId);
@@ -209,7 +220,7 @@ public class DataRetriever {
     }
 
 
-    Dish saveDish(Dish toSave) {
+    Dish saveDish(Dish dish) {
         String upsertDishSql = """
                     INSERT INTO dish (id, selling_price, name, dish_type)
                     VALUES (?, ?, ?, ?::dish_type)
@@ -224,25 +235,24 @@ public class DataRetriever {
             conn.setAutoCommit(false);
             Integer dishId;
             try (PreparedStatement ps = conn.prepareStatement(upsertDishSql)) {
-                if (toSave.getId() != null) {
-                    ps.setInt(1, toSave.getId());
+                if (dish.getId() != null) {
+                    ps.setInt(1, dish.getId());
                 } else {
                     ps.setInt(1, getNextSerialValue(conn, "dish", "id"));
                 }
-                if (toSave.getPrice() != null) {
-                    ps.setDouble(2, toSave.getPrice());
+                if (dish.getPrice() != null) {
+                    ps.setDouble(2, dish.getPrice());
                 } else {
                     ps.setNull(2, Types.DOUBLE);
                 }
-                ps.setString(3, toSave.getName());
-                ps.setString(4, toSave.getDishType().name());
+                ps.setString(3, dish.getName());
+                ps.setString(4, dish.getDishType().name());
                 try (ResultSet rs = ps.executeQuery()) {
                     rs.next();
                     dishId = rs.getInt(1);
                 }
             }
-
-            List<DishIngredient> newDishIngredients = toSave.getDishIngredients();
+            List<DishIngredient> newDishIngredients = dish.getDishIngredients();
             detachIngredients(conn, newDishIngredients);
             attachIngredients(conn, newDishIngredients);
 
@@ -300,12 +310,12 @@ public class DataRetriever {
 
 
     private void detachIngredients(Connection conn, List<DishIngredient> dishIngredients) {
-        Map<Integer, List<DishIngredient>> dishIngredientsGroupByDishId = dishIngredients.stream()
+        Map<Object,List<DishIngredient>> dishIngredientsGroupByDishId = dishIngredients.stream()
                 .collect(Collectors.groupingBy(dishIngredient -> dishIngredient.getDish().getId()));
         dishIngredientsGroupByDishId.forEach((dishId, dishIngredientList) -> {
             try (PreparedStatement ps = conn.prepareStatement(
                     "DELETE FROM dish_ingredient where id_dish = ?")) {
-                ps.setInt(1, dishId);
+                ps.setInt(1, (int) dishId);
                 ps.executeUpdate(); // TODO: must be a grouped by batch
             } catch (SQLException e) {
                 throw new RuntimeException(e);

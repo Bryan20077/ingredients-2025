@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,12 +9,15 @@ public class Dish {
     private Double price;
     private String name;
     private DishTypeEnum dishType;
-    private List<DishIngredient> dishIngredients;
+    private List<DishIngredient> dishIngredients = new ArrayList<>();
 
     public Dish() {
     }
 
     public List<DishIngredient> getDishIngredients() {
+        if (dishIngredients == null) {
+            dishIngredients = new ArrayList<>();
+        }
         return dishIngredients;
     }
 
@@ -21,10 +26,12 @@ public class Dish {
             this.dishIngredients = new ArrayList<>();
             return;
         }
-        for (DishIngredient ingredient : dishIngredients) {
-            ingredient.setDish(this);
+        for (DishIngredient ingredient : list) {
+            if (ingredient != null) {
+                ingredient.setDish(this);
+            }
         }
-        this.dishIngredients = dishIngredients;
+        this.dishIngredients = list;
     }
 
 
@@ -102,5 +109,10 @@ public class Dish {
             throw new RuntimeException("Price is null");
         }
         return price - getDishCost();
+    }
+
+    public void setDishIngredients1(List<DishIngredient> ingredientByDishId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDishIngredients'");
     }
 }

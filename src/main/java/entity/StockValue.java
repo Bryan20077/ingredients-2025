@@ -1,3 +1,5 @@
+package entity;
+
 public class StockValue {
     private Double quantity;
     private Unit unit;
@@ -26,3 +28,4 @@ public class StockValue {
                 '}';
     }
 }
+

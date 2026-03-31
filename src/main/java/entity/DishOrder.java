@@ -1,3 +1,5 @@
+package entity;
+
 import java.util.Objects;
 
 public class DishOrder {
@@ -50,3 +52,4 @@ public class DishOrder {
                 '}';
     }
 }
+

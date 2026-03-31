@@ -1,49 +1,42 @@
-
+import entity.Dish;
+import entity.Ingredient;
+import entity.Unit;
 
 public class DishIngredient {
-    private Dish dish;
-    private Ingredient ingredient;
-    private Double quantity;
-    private Unit unit;
 
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public Dish getIngredient() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getIngredient'");
     }
 
     public Dish getDish() {
-        return dish;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDish'");
     }
 
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    public double getQuantity() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getQuantity'");
     }
 
-    @Override
-    public String toString() {
-        return "DishIngredient{" +
-                "ingredient=" + ingredient +
-                ", quantity=" + quantity +
-                ", unit=" + unit +
-                '}';
+    public Object getUnit() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUnit'");
     }
+
+    public void setIngredient(Ingredient ingredient) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setIngredient'");
+    }
+
+    public void setUnit(Unit valueOf) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setUnit'");
+    }
+
+    public void setQuantity(Double double1) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setQuantity'");
+    }
+
 }
