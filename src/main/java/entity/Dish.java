@@ -26,12 +26,13 @@ public class Dish {
             this.dishIngredients = new ArrayList<>();
             return;
         }
+        DishIngredient[] list = null;
         for (DishIngredient ingredient : list) {
             if (ingredient != null) {
                 ingredient.setDish(this);
             }
         }
-        this.dishIngredients = list;
+        this.dishIngredients = dishIngredients;
     }
 
 

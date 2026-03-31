@@ -39,4 +39,9 @@ public class DishIngredient {
         throw new UnsupportedOperationException("Unimplemented method 'setQuantity'");
     }
 
+    public void setDish(Dish dish) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDish'");
+    }
+
 }

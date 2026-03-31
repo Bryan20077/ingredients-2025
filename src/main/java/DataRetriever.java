@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import entity.CategoryEnum;
 import entity.Dish;
+import entity.DishIngredient;
 import entity.DishOrder;
 import entity.DishTypeEnum;
 import entity.Ingredient;
@@ -247,14 +248,30 @@ public class DataRetriever {
                 }
                 ps.setString(3, dish.getName());
                 ps.setString(4, dish.getDishType().name());
-                try (ResultSet rs = ps.executeQuery()) {
-                    rs.next();
-                    dishId = rs.getInt(1);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        rs.next();
+                        dishId = rs.getInt(1);
+                    }
                 }
-            }
-            List<DishIngredient> newDishIngredients = dish.getDishIngredients();
-            detachIngredients(conn, newDishIngredients);
-            attachIngredients(conn, newDishIngredients);
+
+                // set the generated id back on the dish so ingredients can reference it
+                dish.setId(dishId);
+
+                List<DishIngredient> newDishIngredients = dish.getDishIngredients();
+                if (newDishIngredients == null) {
+                    newDishIngredients = new ArrayList<>();
+                }
+                for (DishIngredient di : newDishIngredients) {
+                    if (di == null) continue;
+                    if (di.getDish() == null) {
+                        di.setDish(dish);
+                    } else {
+                        di.getDish().setId(dishId);
+                    }
+                }
+
+                detachIngredients(conn, newDishIngredients);
+                attachIngredients(conn, newDishIngredients);
 
             conn.commit();
             return findDishById(dishId);
